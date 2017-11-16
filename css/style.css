@@ -1,1 +1,22 @@
-# Empty CSS file for your own CSS
+.navbar {
+    opacity: 0.9;
+}
+
+.img_acc {
+    height: 100%;
+    width: 100%;
+}
+
+
+.footer {
+ background-color: #8888   
+}
+
+.title {
+    margin: 30px;
+}
+
+.banner {
+    height: 200px;
+    background-image: url(/img/sunset-1645105_1920.jpg) no-repeat cover;
+}
