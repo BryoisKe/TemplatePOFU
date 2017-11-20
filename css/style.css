@@ -9,12 +9,12 @@
 
 
 .footer {
-     position: absolute;
-    bottom: 0;
+     position: static;
+       left: 0;
+   bottom: 0;
     width: 100%;
-    height: 60px;
-    background: #000000;
-    color: #FFFFFF;
+    height: 30px;
+    background: #888888;
 }
 
 .title {
@@ -27,4 +27,14 @@
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
+}
+
+.imgArticle {
+    height: 900px;
+}
+
+.imgCollabo {
+    margin: 5px;
+    width: 200px;
+    height: 300px;
 }
