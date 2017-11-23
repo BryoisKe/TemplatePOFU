@@ -1,5 +1,5 @@
 .navbar {
-    opacity: 0.9;
+    opacity: 0.2;
 }
 
 .img_acc {
@@ -23,7 +23,7 @@
 
 .banner {
     height: 300px;
-    background-image: url(/img/sunset-1645105_1920.jpg);
+    background-image: url(../img/sunset-1645105_1920.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;
@@ -45,5 +45,27 @@ textarea {
     box-sizing: border-box;
 
     width: 100%;
+    background-color: #8888;
+    padding: 5px;
+}
+
+
+
+.form-mail {
+padding: 10px;
+
+}
+
+.espacement {
+}
+input{
+    width: 100%;
     background-color: #8888
+}
+
+
+
+.form-login {
+    width: 300px;
+    padding: 10px;
 }
