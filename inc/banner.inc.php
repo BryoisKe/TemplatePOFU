@@ -1,20 +1,18 @@
 <?php
+
 $BannerLogout = '';
-if(isset($_SESSION['role'])){
-if ($_SESSION['role'] == 'administrateur') {
-    $BannerLogout = '  <li>
+if (isset($_SESSION['role'])) {
+    if ($_SESSION['role'] == 'administrateur') {
+        $BannerLogout = '  <li>
                 <a href="logout.php">logout</a>
             </li>';
-}
- else {
-     $BannerLogout = '';
-}
-
-}
-else{
+    } else {
+        $BannerLogout = '';
+    }
+} else {
     $BannerLogout = '';
 }
-    echo '<div class="row">
+echo '<div class="row">
                 <div class="col-md-12">
                     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
                         <div class="navbar-header">
@@ -42,7 +40,7 @@ else{
                                     <a href="galerie.html">Galerie</a>
                                 </li>
                                 <li>
-                                    <a href="contact.html">Contact</a>
+                                    <a href="contact.php">Contact</a>
                                 </li>', $BannerLogout, '
 
                             </ul>

@@ -1,5 +1,5 @@
 .navbar {
-    opacity: 0.2;
+    opacity: 0.5;
 }
 
 .img_acc {
@@ -37,7 +37,7 @@
 .imgCollabo {
     margin: 5px;
     width: 200px;
-    height: 300px;
+    height: 250px;
 }
 textarea {
     -webkit-box-sizing: border-box;
@@ -68,4 +68,7 @@ input{
 .form-login {
     width: 300px;
     padding: 10px;
+}
+.listeImageEmploye{
+    display: inline-block;
 }
