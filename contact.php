@@ -11,7 +11,7 @@ $role = 0;
 if (isset($_SESSION['role'])) {
     $role = 1;
 }
-if(isset($_GET['id'])){
+if (isset($_GET['id'])) {
     $idEmploye = $_GET['id'];
     $rqtSuppEmploye = $bdd->prepare('UPDATE tblemploye SET status_employe = 0 WHERE numero_employe = :numero');
     $rqtSuppEmploye->bindValue(':numero', $idEmploye);
@@ -61,10 +61,18 @@ if(isset($_GET['id'])){
                         </div>
                         <div class="col-md-6">
                             <center>
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1618.0552440653883!2d6.946332273446883!3d46.99638387000964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478e0a24799ec6a7%3A0xd0328b28528dfeaa!2sCentre+Professionnel+du+Littoral+Neuch%C3%A2telois!5e0!3m2!1sfr!2sch!4v1511172467947" width="300" height="300" frameborder="0" style="border:0" allowfullscreen></iframe></center>
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1618.0552440653883!2d6.946332273446883!3d46.99638387000964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478e0a24799ec6a7%3A0xd0328b28528dfeaa!2sCentre+Professionnel+du+Littoral+Neuch%C3%A2telois!5e0!3m2!1sfr!2sch!4v1511172467947" width="300" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+                            </center>                            
                         </div>
                     </div>
-                    <div class="row title">
+                    <?php
+                    if($role == 1){
+                    echo '<br><div class="row">'
+                        . '<div class="col-sm-4"><a href="add-employe.php" class="btn btn-lg btn-primary btn-block">Ajouter un employé</a></div>'
+                        . '<div class="col-sm-8"></div>'
+                        . '</div><br>';
+                    }
+                    ?>
                         <div class="row">
                             <br>
                             <center>                         
@@ -75,13 +83,13 @@ if(isset($_GET['id'])){
                                 while ($row = $rqtEmploye->fetch(PDO::FETCH_OBJ)) {
                                     if ($row->status_employe == 1) {
                                         echo '<div class="listeImageEmploye">
-                                                <img alt="Image de collaborateur ',$numeroEmploye,'" src="img/employe/',$row->image_employe,'" class="imgCollabo"/>
-                                                <p> ',$row->genre,' ',$row->nom,' ',$row->prenom,'<br>
-                                                ',$row->adresse_mail,'<br>
-                                                ',$row->numero_telephone,'<br>';
-                                        if($role == 1){
-                                            echo '<a href="',$_SERVER['PHP_SELF'],'?id=',$row->numero_employe,'" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a><br>';
-                                             echo '<a href="update-employe.php?id=',$row->numero_employe,'" >Modifié l\'employé</a>';
+                                                <img alt="Image de collaborateur ', $numeroEmploye, '" src="img/employe/', $row->image_employe, '" class="imgCollabo"/>
+                                                <p> ', $row->genre, ' ', $row->nom, ' ', $row->prenom, '<br>
+                                                ', $row->adresse_mail, '<br>
+                                                ', $row->numero_telephone, '<br>';
+                                        if ($role == 1) {
+                                            echo '<a href="', $_SERVER['PHP_SELF'], '?id=', $row->numero_employe, '" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a><br>';
+                                            echo '<a href="update-employe.php?id=', $row->numero_employe, '" >Modifier l\'employé</a>';
                                         }
                                         echo '</p></div>';
                                         $numeroEmploye += 1;
@@ -91,7 +99,6 @@ if(isset($_GET['id'])){
                             </center>
                         </div>
                         <br><br>
-                    </div>
                 </div>
                 <div class="col-md-2">
                 </div>
