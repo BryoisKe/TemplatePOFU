@@ -1,5 +1,12 @@
 <?php
 session_start();
+try {
+    include_once './inc/connexion.inc.php';
+    $bdd = getConnexion('pofu');
+} catch (Exception $ex) {
+    
+}
+$rqtTemoignage = $bdd->prepare('SELECT *, DATE_FORMAT(date_temoignage, \'%d-%m-%Y\') AS dateTe,DATE_FORMAT(date_reponse, \'%d-%m-%Y\') AS dateRe FROM tbltemoignage ORDER BY `tbltemoignage`.`date_temoignage`  DESC');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,43 +42,55 @@ session_start();
                     <h1 class="text-center title">
                         Témoignage
                     </h1>
-                    <div class="row">
-                        <a href="add_temoignage.php"><button type="button" class="btn btn-primary" style="float: right">Ecrire un témoignage</button></a><br>
-                        <hr>
-                        <div class="col-md-2">
-                            Publié le : <br><br>
-                            20.11.2017
-                        </div>
-                        <div class="col-md-10">
-                            <p class="text-left">
-                                Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>. Aliquam eget sapien sapien. Curabitur in metus urna. In hac habitasse platea dictumst. Phasellus eu sem sapien, sed vestibulum velit. Nam purus nibh, lacinia non faucibus et, pharetra in dolor. Sed iaculis posuere diam ut cursus. <em>Morbi commodo sodales nisi id sodales. Proin consectetur, nisi id commodo imperdiet, metus nunc consequat lectus, id bibendum diam velit et dui.</em> Proin massa magna, vulputate nec bibendum nec, posuere nec lacus. <small>Aliquam mi erat, aliquam vel luctus eu, pharetra quis elit. Nulla euismod ultrices massa, et feugiat ipsum consequat eu.</small>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <hr>
-                        <div class="col-md-2">
-                            Publié le : <br><br>
-                            19.11.2017
-                            <br>
-                        </div>
-                        <div class="col-md-10">
-                            <p class="text-left">
-                                Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>. Aliquam eget sapien sapien. Curabitur in metus urna. In hac habitasse platea dictumst. Phasellus eu sem sapien, sed vestibulum velit. Nam purus nibh, lacinia non faucibus et, pharetra in dolor. Sed iaculis posuere diam ut cursus. <em>Morbi commodo sodales nisi id sodales. Proin consectetur, nisi id commodo imperdiet, metus nunc consequat lectus, id bibendum diam velit et dui.</em> Proin massa magna, vulputate nec bibendum nec, posuere nec lacus. <small>Aliquam mi erat, aliquam vel luctus eu, pharetra quis elit. Nulla euismod ultrices massa, et feugiat ipsum consequat eu.</small>
-                            </p>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-3">
-                            Réponse publié le : <br><br>
-                            20.11.2017
-                            <br>
-                        </div>
-                        <div class="col-md-9">
-                            <p>Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>. Aliquam eget sapien sapien. Curabitur in metus urna. In hac habitasse platea dictumst. Phasellus eu sem sapien, sed vestibulum velit. Nam purus nibh, lacinia non faucibus et, pharetra in dolor.</p>
-                        </div>
-                    </div>
+                    <a href="add_temoignage.php"><button type="button" class="btn btn-primary" style="float: right">Ecrire un témoignage</button></a><br>
+                    <?php
+                    $rqtTemoignage->execute();
+                    while ($row = $rqtTemoignage->fetch(PDO::FETCH_OBJ)) {
+                        if($row->status_temoignage == 1){
+                            if($row->reponse == NULL){
+                                echo '<div class="row">
+                                            <hr>
+                                            <div class="col-md-2">
+                                                Publié le : <br><br>
+                                                ',$row->dateTe,'
+                                            </div>
+                                            <div class="col-md-10">
+                                                <p class="text-left">
+                                                    ',$row->temoignage,'
+                                                </p>
+                                            </div>
+                                        </div>';
+                            }
+                            else{
+                                echo '<div class="row">
+                                            <hr>
+                                            <div class="col-md-2">
+                                                Publié le : <br><br>
+                                                ',$row->dateTe,'
+                                                <br>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <p class="text-left">
+                                                ',$row->temoignage,'    
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                Réponse publié le : <br><br>
+                                                ',$row->dateRe,'
+                                                <br>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p>',$row->reponse,'</p>
+                                            </div>
+                                        </div>';
+                            }
+                        }
+                        
+                    }
+                    ?>
                     <hr>
                 </div>
                 <div class="col-md-2">
