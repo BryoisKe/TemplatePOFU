@@ -4,7 +4,7 @@ $BannerLogout = '';
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] == 'administrateur') {
         $BannerLogout = '  <li>
-                <a href="logout.php">logout</a>
+                <a href="logout.php">Déconnexion</a>
             </li>';
     } else {
         $BannerLogout = '';

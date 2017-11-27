@@ -80,7 +80,8 @@ if(isset($_GET['id'])){
                                                 ',$row->adresse_mail,'<br>
                                                 ',$row->numero_telephone,'<br>';
                                         if($role == 1){
-                                            echo '<a href="',$_SERVER['PHP_SELF'],'?id=',$row->numero_employe,'" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a>';
+                                            echo '<a href="',$_SERVER['PHP_SELF'],'?id=',$row->numero_employe,'" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a><br>';
+                                             echo '<a href="update-employe.php?id=',$row->numero_employe,'" >Modifié l\'employé</a>';
                                         }
                                         echo '</p></div>';
                                         $numeroEmploye += 1;
