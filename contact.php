@@ -66,48 +66,50 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
                     <?php
-                    if($role == 1){
-                    echo '<br><div class="row">'
+                    if ($role == 1) {
+                        echo '<br><div class="row">'
                         . '<div class="col-sm-4"><a href="add-employe.php" class="btn btn-lg btn-primary btn-block">Ajouter un employé</a></div>'
-                        . '<div class="col-sm-8"></div>'
-                        . '</div><br>';
+                        . '<div class="col-sm-4"><a href="display-delete-employe.php" class="btn btn-lg btn-primary btn-block">Employé supprimer</a></div>'
+                        . '<div class="col-sm-4"></div></div><br>';
                     }
                     ?>
-                        <div class="row">
-                            <br>
-                            <center>                         
-                                <?php
-                                $numeroEmploye = 1;
-                                $rqtEmploye = $bdd->prepare('SELECT numero_employe,prenom, nom, numero_telephone,adresse_mail,genre,image_employe,status_employe FROM tblemploye');
-                                $rqtEmploye->execute();
-                                while ($row = $rqtEmploye->fetch(PDO::FETCH_OBJ)) {
-                                    if ($row->status_employe == 1) {
-                                        echo '<div class="listeImageEmploye">
+                    <div class="row">
+                        <br>
+                        <center>                         
+                            <?php
+                            $numeroEmploye = 1;
+                            $rqtEmploye = $bdd->prepare('SELECT numero_employe,prenom, nom, numero_telephone,adresse_mail,genre,image_employe,status_employe FROM tblemploye');
+                            $rqtEmploye->execute();
+                            while ($row = $rqtEmploye->fetch(PDO::FETCH_OBJ)) {
+                                if ($row->status_employe == 1) {
+                                    echo '<div class="listeImageEmploye">
                                                 <img alt="Image de collaborateur ', $numeroEmploye, '" src="img/employe/', $row->image_employe, '" class="imgCollabo"/>
                                                 <p> ', $row->genre, ' ', $row->nom, ' ', $row->prenom, '<br>
                                                 ', $row->adresse_mail, '<br>
                                                 ', $row->numero_telephone, '<br>';
-                                        if ($role == 1) {
-                                            echo '<a href="', $_SERVER['PHP_SELF'], '?id=', $row->numero_employe, '" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a><br>';
-                                            echo '<a href="update-employe.php?id=', $row->numero_employe, '" >Modifier l\'employé</a>';
-                                        }
-                                        echo '</p></div>';
-                                        $numeroEmploye += 1;
+                                    if ($role == 1) {
+                                        echo '<a href="', $_SERVER['PHP_SELF'], '?id=', $row->numero_employe, '" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a><br>';
+                                        echo '<a href="update-employe.php?id=', $row->numero_employe, '" >Modifier l\'employé</a>';
                                     }
+                                    echo '</p></div>';
+                                    $numeroEmploye += 1;
                                 }
-                                ?>
-                            </center>
-                        </div>
-                        <br><br>
+                            }
+                            ?>
+                        </center>
+                    </div>
+                    <br><br>
                 </div>
                 <div class="col-md-2">
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12 footer">
-                    <strong>POFU</strong>
+            <footer>
+                <div class="row">
+                    <div class="col-md-12 footer">
+                        <strong>POFU | N° (123) 456-7890  | pofu@info.ch </strong>
+                    </div>
                 </div>
-            </div>
+            </footer>
         </div>
 
         <script src="js/jquery.min.js"></script>
