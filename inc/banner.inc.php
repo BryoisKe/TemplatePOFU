@@ -28,16 +28,16 @@ echo '<div class="row">
                                     <a href="index.php">Accueil</a>
                                 </li>
                                 <li>
-                                    <a href="temoignage.html">Témoignages</a>
+                                    <a href="temoignage.php">Témoignages</a>
                                 </li>
                                 <li>
-                                    <a href="article.html">Article</a>
+                                    <a href="article.php">Article</a>
                                 </li>
                                 <li>
-                                    <a href="texte.html">Texte</a>
+                                    <a href="texte.php">Texte</a>
                                 </li>
                                 <li>
-                                    <a href="galerie.html">Galerie</a>
+                                    <a href="galerie.php">Galerie</a>
                                 </li>
                                 <li>
                                     <a href="contact.php">Contact</a>
