@@ -89,7 +89,7 @@ try {
                                             $rqtSelect = $bdd->prepare('SELECT numero_employe,nom,prenom,adresse_mail,numero_telephone FROM tblemploye WHERE status_employe = 0');
                                             $rqtSelect->execute();
                                             while ($row = $rqtSelect->fetch(PDO::FETCH_OBJ)) {
-                                                echo '<tr><td>',$row->nom,'</td><td>',$row->prenom,'</td><td>',$row->adresse_mail,'</td><td>',$row->numero_telephone,'</td><td><a href="',$_SERVER['PHP_SELF'],'?id=',$row->numero_employe,'">Activer</a></td></tr>';
+                                                echo '<tr><td>',$row->nom,'</td><td>',$row->prenom,'</td><td>',$row->adresse_mail,'</td><td>',$row->numero_telephone,'</td><td><a href="',$_SERVER['PHP_SELF'],'?id=',$row->numero_employe,'">Activer le compte</a></td></tr>';
                                             }
                                             ?>
                                     </tbody>

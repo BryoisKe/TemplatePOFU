@@ -69,7 +69,7 @@ if (isset($_GET['id'])) {
                     if ($role == 1) {
                         echo '<br><div class="row">'
                         . '<div class="col-sm-4"><a href="add-employe.php" class="btn btn-lg btn-primary btn-block">Ajouter un employé</a></div>'
-                        . '<div class="col-sm-4"><a href="display-delete-employe.php" class="btn btn-lg btn-primary btn-block">Employé supprimer</a></div>'
+                        . '<div class="col-sm-4"><a href="display-delete-employe.php" class="btn btn-lg btn-primary btn-block">Les employés supprimés</a></div>'
                         . '<div class="col-sm-4"></div></div><br>';
                     }
                     ?>

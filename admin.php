@@ -8,6 +8,7 @@ try {
 }
 $email = '';
 $mdp = '';
+$mdpCrypt = '';
 
 if (isset($_POST['email']) and isset($_POST['mdp'])) {
     $email = $_POST['email'];
@@ -16,7 +17,8 @@ if (isset($_POST['email']) and isset($_POST['mdp'])) {
     $connexion = $bdd->prepare('SELECT adresse_mail,mot_de_passe,status_employe,role FROM tblemploye');
     $connexion->execute();
     while ($row = $connexion->fetch(PDO::FETCH_OBJ)) {
-        if ($email == $row->adresse_mail && $mdp == $row->mot_de_passe && $row->role == 1 && $row->status_employe == 1) {
+        $mdpCrypt = md5($mdp);
+        if ($email == $row->adresse_mail && $mdpCrypt == $row->mot_de_passe && $row->role == 1 && $row->status_employe == 1) {
             $_SESSION['role'] = 'administrateur';
             header("Location: index.php");
         } else {
