@@ -24,7 +24,7 @@ $msgErreur = '';
 $genre = '';
 
 
-//Modification de l'employé dans la bdd
+//Ajout de l'employé dans la bdd
     if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['image']) and isset($_POST['email'])) {
         if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['telephone']) and ! empty($_POST['image']) and ! empty($_POST['email'])) {
             $nom = $_POST['nom'];
@@ -45,6 +45,7 @@ $genre = '';
 
             $rqtAddEmploye->execute();
             header("Location: contact.php");
+            exit();
         } else {
             $msgErreur = 'Veuillez remplir un champ';
         }
