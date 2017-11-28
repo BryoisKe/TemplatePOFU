@@ -2,7 +2,7 @@
 session_start();
 try {
     include_once './inc/connexion.inc.php';
-    $bdd = getConnexion('pofu');
+    $bdd = getConnexion('pofuv2');
 } catch (Exception $ex) {
     
 }
@@ -14,15 +14,14 @@ if (isset($_POST['email']) and isset($_POST['mdp'])) {
     $email = $_POST['email'];
     $mdp = $_POST['mdp'];
     $email = strtolower($email);
-    $connexion = $bdd->prepare('SELECT adresse_mail,mot_de_passe,status_employe,role FROM tblemploye');
+    $connexion = $bdd->prepare('SELECT adresse_mail,mot_de_passe,status_employe,numero_tblroles as role FROM tblemployes');
     $connexion->execute();
+    $mdpCrypt = md5($mdp);
     while ($row = $connexion->fetch(PDO::FETCH_OBJ)) {
-        $mdpCrypt = md5($mdp);
-        if ($email == $row->adresse_mail && $mdpCrypt == $row->mot_de_passe && $row->role == 1 && $row->status_employe == 1) {
+        $emailbdd = strtolower($row->adresse_mail);
+        if ($email == $emailbdd && $mdpCrypt == $row->mot_de_passe && $row->role == 120 && $row->status_employe == 1) {
             $_SESSION['role'] = 'administrateur';
             header("Location: index.php");
-        } else {
-            echo 'Echec de connexion';
         }
     }
 }
@@ -91,8 +90,8 @@ if (isset($_POST['email']) and isset($_POST['mdp'])) {
                 </div>
             </div>
         </div>
-            <script src="js/jquery.min.js"></script>
-            <script src="js/bootstrap.min.js"></script>
-            <script src="js/scripts.js"></script>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/scripts.js"></script>
     </body>
 </html>

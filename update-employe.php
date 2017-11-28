@@ -12,7 +12,7 @@ if(!isset($_SESSION['role'])){
 
 try {
     include_once './inc/connexion.inc.php';
-    $bdd = getConnexion('pofu');
+    $bdd = getConnexion('pofuv2');
 } catch (Exception $ex) {
     
 }
@@ -26,28 +26,28 @@ $msgErreur = '';
 //Recupération des informations pour afficher les données de l'utilisateur
 if (isset($_GET['id'])) {
     $numero_employe = $_GET['id'];
-    $rqtSelect = $bdd->prepare('SELECT nom,prenom,adresse_mail,numero_telephone,image_employe FROM tblemploye WHERE numero_employe=:id');
+    $rqtSelect = $bdd->prepare('SELECT nom,prenom,adresse_mail,telephone,image_employe FROM tblemployes WHERE numero=:id');
     $rqtSelect->bindValue('id', $numero_employe);
     $rqtSelect->execute();
     while ($row = $rqtSelect->fetch(PDO::FETCH_OBJ)) {
         $nom = $row->nom;
         $prenom = $row->prenom;
         $email = $row->adresse_mail;
-        $telephone = $row->numero_telephone;
+        $telephone = $row->telephone;
         $nom_image = $row->image_employe;
     }
 }
 //Modification de l'employé dans la bdd
-try{
+
 if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['image']) and isset($_POST['email'])) {
-    if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['telephone']) and ! empty($_POST['image']) and ! empty($_POST['email'])) {
+    if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['image']) and ! empty($_POST['email'])) {
         $nom = $_POST['nom'];
         $prenom = $_POST['prenom'];
         $email = $_POST['email'];
         $telephone = $_POST['telephone'];
         $nom_image = $_POST['image'];
-        $rqtUpdateEmploye = $bdd->prepare('UPDATE tblemploye SET prenom =:prenom, nom =:nom, numero_telephone =:telephone,adresse_mail=:email,image_employe =:image'
-                . ' WHERE numero_employe =:id');
+        $rqtUpdateEmploye = $bdd->prepare('UPDATE tblemployes SET prenom =:prenom, nom =:nom, telephone =:telephone,adresse_mail=:email,image_employe =:image'
+                . ' WHERE numero =:id');
         
         $rqtUpdateEmploye->bindValue(':prenom', $prenom);
         $rqtUpdateEmploye->bindValue(':nom', $nom);
@@ -62,9 +62,6 @@ if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone
     } else {
         $msgErreur = 'Veuillez remplir un champ';
     }
-}
-}  catch (Exception $e){
-    $msgErreur = 'Erreur d\'ajout';
 }
 ?>
 

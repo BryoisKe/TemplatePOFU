@@ -11,7 +11,7 @@ if (!isset($_SESSION['role'])) {
 
 try {
     include_once './inc/connexion.inc.php';
-    $bdd = getConnexion('pofu');
+    $bdd = getConnexion('pofuv2');
 } catch (Exception $ex) {
     
 }
@@ -26,7 +26,7 @@ $msgErreur = '';
 try {
     if (isset($_GET['id'])) {
             $numero_employe = $_GET['id'];
-            $rqtUpdateEmployeDel = $bdd->prepare('UPDATE tblemploye SET status_employe = 1 WHERE numero_employe =:id');
+            $rqtUpdateEmployeDel = $bdd->prepare('UPDATE tblemployes SET status_employe = 1 WHERE numero =:id');
             $rqtUpdateEmployeDel->bindValue(':id', $numero_employe);
             $rqtUpdateEmployeDel->execute();
             header("Location: display-delete-employe.php");
@@ -86,10 +86,10 @@ try {
                                     <tbody>
                                         
                                             <?php
-                                            $rqtSelect = $bdd->prepare('SELECT numero_employe,nom,prenom,adresse_mail,numero_telephone FROM tblemploye WHERE status_employe = 0');
+                                            $rqtSelect = $bdd->prepare('SELECT numero,nom,prenom,adresse_mail,telephone FROM tblemployes WHERE status_employe = 0');
                                             $rqtSelect->execute();
                                             while ($row = $rqtSelect->fetch(PDO::FETCH_OBJ)) {
-                                                echo '<tr><td>',$row->nom,'</td><td>',$row->prenom,'</td><td>',$row->adresse_mail,'</td><td>',$row->numero_telephone,'</td><td><a href="',$_SERVER['PHP_SELF'],'?id=',$row->numero_employe,'">Activer le compte</a></td></tr>';
+                                                echo '<tr><td>',$row->nom,'</td><td>',$row->prenom,'</td><td>',$row->adresse_mail,'</td><td>',$row->telephone,'</td><td><a href="',$_SERVER['PHP_SELF'],'?id=',$row->numero,'">Activer le compte</a></td></tr>';
                                             }
                                             ?>
                                     </tbody>

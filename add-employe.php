@@ -11,7 +11,7 @@ if (!isset($_SESSION['role'])) {
 
 try {
     include_once './inc/connexion.inc.php';
-    $bdd = getConnexion('pofu');
+    $bdd = getConnexion('pofuv2');
 } catch (Exception $ex) {
     
 }
@@ -26,15 +26,16 @@ $genre = '';
 
 //Ajout de l'employé dans la bdd
     if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['image']) and isset($_POST['email'])) {
-        if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['telephone']) and ! empty($_POST['image']) and ! empty($_POST['email'])) {
+        if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and !empty($_POST['image']) and ! empty($_POST['email'])) {
             $nom = $_POST['nom'];
             $prenom = $_POST['prenom'];
             $email = $_POST['email'];
             $telephone = $_POST['telephone'];
             $nom_image = $_POST['image'];
             $genre = $_POST['genre'];
+            $role = 60;
 
-            $rqtAddEmploye = $bdd->prepare('INSERT INTO tblemploye (prenom,nom,numero_telephone,adresse_mail,image_employe,genre,status_employe,role) VALUES (:prenom,:nom,:telephone,:email,:image,:genre,1,0)');
+            $rqtAddEmploye = $bdd->prepare('INSERT INTO tblemployes (prenom,nom,telephone,adresse_mail,image_employe,genre,status_employe,numero_tblroles) VALUES (:prenom,:nom,:telephone,:email,:image,:genre,1,:role)');
 
             $rqtAddEmploye->bindValue(':prenom', $prenom);
             $rqtAddEmploye->bindValue(':nom', $nom);
@@ -42,6 +43,7 @@ $genre = '';
             $rqtAddEmploye->bindValue(':telephone', $telephone);
             $rqtAddEmploye->bindValue(':image', $nom_image);
             $rqtAddEmploye->bindValue(':genre', $genre);
+            $rqtAddEmploye->bindValue(':role',$role);
 
             $rqtAddEmploye->execute();
             header("Location: contact.php");
@@ -114,8 +116,8 @@ $genre = '';
                                     <div class="form-group col-sm-6">
                                         <label>Genre</label>
                                         <select name="genre" class="form-control">
-                                            <option value="Monsieur">Homme</option>
-                                            <option value="Madame">Femme</option>
+                                            <option value="homme">Homme</option>
+                                            <option value="femme">Femme</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-6">                              

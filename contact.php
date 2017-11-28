@@ -2,7 +2,7 @@
 session_start();
 try {
     include_once './inc/connexion.inc.php';
-    $bdd = getConnexion('pofu');
+    $bdd = getConnexion('pofuv2');
 } catch (Exception $ex) {
     
 }
@@ -13,7 +13,7 @@ if (isset($_SESSION['role'])) {
 }
 if (isset($_GET['id'])) {
     $idEmploye = $_GET['id'];
-    $rqtSuppEmploye = $bdd->prepare('UPDATE tblemploye SET status_employe = 0 WHERE numero_employe = :numero');
+    $rqtSuppEmploye = $bdd->prepare('UPDATE tblemployes SET status_employe = 0 WHERE numero = :numero');
     $rqtSuppEmploye->bindValue(':numero', $idEmploye);
     $rqtSuppEmploye->execute();
     header("Location: contact.php");
@@ -78,18 +78,31 @@ if (isset($_GET['id'])) {
                         <center>                         
                             <?php
                             $numeroEmploye = 1;
-                            $rqtEmploye = $bdd->prepare('SELECT numero_employe,prenom, nom, numero_telephone,adresse_mail,genre,image_employe,status_employe FROM tblemploye');
+                            $rqtEmploye = $bdd->prepare('SELECT numero,prenom, nom, telephone,adresse_mail,genre,image_employe,status_employe FROM tblemployes');
                             $rqtEmploye->execute();
-                            while ($row = $rqtEmploye->fetch(PDO::FETCH_OBJ)) {
+                            while ($row = $rqtEmploye->fetch(PDO::FETCH_OBJ)) {                                
+                                if($row->telephone == NULL){
+                                    $AfficheNum = '';
+                                }
+                                else{
+                                    $AfficheNum = $row->telephone;
+                                }
+                                if($row->genre == 'homme'){
+                                    $genre = 'Monsieur';
+                                }
+                                else{
+                                    $genre = 'Madame';
+                                }
+                                
                                 if ($row->status_employe == 1) {
                                     echo '<div class="listeImageEmploye">
                                                 <img alt="Image de collaborateur ', $numeroEmploye, '" src="img/employe/', $row->image_employe, '" class="imgCollabo"/>
-                                                <p> ', $row->genre, ' ', $row->nom, ' ', $row->prenom, '<br>
+                                                <p> ', $genre, ' ', $row->nom, ' ', $row->prenom, '<br>
                                                 ', $row->adresse_mail, '<br>
-                                                ', $row->numero_telephone, '<br>';
+                                                ', $AfficheNum,'<br>';
                                     if ($role == 1) {
-                                        echo '<a href="', $_SERVER['PHP_SELF'], '?id=', $row->numero_employe, '" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a><br>';
-                                        echo '<a href="update-employe.php?id=', $row->numero_employe, '" >Modifier l\'employé</a>';
+                                        echo '<a href="', $_SERVER['PHP_SELF'], '?id=', $row->numero, '" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a><br>';
+                                        echo '<a href="update-employe.php?id=', $row->numero, '" >Modifier l\'employé</a>';
                                     }
                                     echo '</p></div>';
                                     $numeroEmploye += 1;
