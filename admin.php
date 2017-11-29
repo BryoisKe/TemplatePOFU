@@ -9,6 +9,7 @@ try {
 $email = '';
 $mdp = '';
 $mdpCrypt = '';
+$msgErreur = '';
 
 if (isset($_POST['email']) and isset($_POST['mdp'])) {
     $email = $_POST['email'];
@@ -16,12 +17,28 @@ if (isset($_POST['email']) and isset($_POST['mdp'])) {
     $email = strtolower($email);
     $connexion = $bdd->prepare('SELECT adresse_mail,mot_de_passe,status_employe,numero_tblroles as role FROM tblemployes');
     $connexion->execute();
-    $mdpCrypt = md5($mdp);
+    if ($mdp != NULL) {
+        $mdpCrypt = md5($mdp);
+    }
+
     while ($row = $connexion->fetch(PDO::FETCH_OBJ)) {
         $emailbdd = strtolower($row->adresse_mail);
-        if ($email == $emailbdd && $mdpCrypt == $row->mot_de_passe && $row->role == 120 && $row->status_employe == 1) {
-            $_SESSION['role'] = 'administrateur';
-            header("Location: index.php");
+        if ($email == $emailbdd) {
+            if ($row->status_employe == 1) {
+                if ($mdpCrypt == $row->mot_de_passe) {
+                    if ($row->role == 120) {
+                        $_SESSION['role'] = 'administrateur';
+                        $msgErreur = '';
+                        header("Location: index.php");
+                    } else {
+                        $msgErreur = 'Vous n\'avez pas les droits';
+                    }
+                } else {
+                    $msgErreur = 'Identifiant invalide';
+                }
+            }else{
+                $msgErreur = 'Compte désactiver';
+            }
         }
     }
 }
@@ -76,6 +93,12 @@ if (isset($_POST['email']) and isset($_POST['mdp'])) {
                                         <a href="index.html" class="btn btn-lg btn-primary btn-block">Annuler</a>
                                     </div>
                                 </form>
+                                <?php
+                                if ($msgErreur != '') {
+                                    echo '<div class="alert alert-danger">', $msgErreur, '</div>';
+                                    $msgErreur = '';
+                                }
+                                ?>
                             </center>
                         </div>
                     </div>

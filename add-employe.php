@@ -25,33 +25,33 @@ $genre = '';
 
 
 //Ajout de l'employé dans la bdd
-    if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['image']) and isset($_POST['email'])) {
-        if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and !empty($_POST['image']) and ! empty($_POST['email'])) {
-            $nom = $_POST['nom'];
-            $prenom = $_POST['prenom'];
-            $email = $_POST['email'];
-            $telephone = $_POST['telephone'];
-            $nom_image = $_POST['image'];
-            $genre = $_POST['genre'];
-            $role = 60;
+if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['image']) and isset($_POST['email'])) {
+    if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['image']) and ! empty($_POST['email'])) {
+        $nom = $_POST['nom'];
+        $prenom = $_POST['prenom'];
+        $email = $_POST['email'];
+        $telephone = $_POST['telephone'];
+        $nom_image = $_POST['image'];
+        $genre = $_POST['genre'];
+        $role = 60;
 
-            $rqtAddEmploye = $bdd->prepare('INSERT INTO tblemployes (prenom,nom,telephone,adresse_mail,image_employe,genre,status_employe,numero_tblroles) VALUES (:prenom,:nom,:telephone,:email,:image,:genre,1,:role)');
+        $rqtAddEmploye = $bdd->prepare('INSERT INTO tblemployes (prenom,nom,telephone,adresse_mail,image_employe,genre,status_employe,numero_tblroles) VALUES (:prenom,:nom,:telephone,:email,:image,:genre,1,:role)');
 
-            $rqtAddEmploye->bindValue(':prenom', $prenom);
-            $rqtAddEmploye->bindValue(':nom', $nom);
-            $rqtAddEmploye->bindValue(':email', $email);
-            $rqtAddEmploye->bindValue(':telephone', $telephone);
-            $rqtAddEmploye->bindValue(':image', $nom_image);
-            $rqtAddEmploye->bindValue(':genre', $genre);
-            $rqtAddEmploye->bindValue(':role',$role);
+        $rqtAddEmploye->bindValue(':prenom', $prenom);
+        $rqtAddEmploye->bindValue(':nom', $nom);
+        $rqtAddEmploye->bindValue(':email', $email);
+        $rqtAddEmploye->bindValue(':telephone', $telephone);
+        $rqtAddEmploye->bindValue(':image', $nom_image);
+        $rqtAddEmploye->bindValue(':genre', $genre);
+        $rqtAddEmploye->bindValue(':role', $role);
 
-            $rqtAddEmploye->execute();
-            header("Location: contact.php");
-            exit();
-        } else {
-            $msgErreur = 'Veuillez remplir un champ';
-        }
+        $rqtAddEmploye->execute();
+        header("Location: contact.php");
+        exit();
+    } else {
+        $msgErreur = 'Veuillez remplir un champ';
     }
+}
 ?>
 
 <!DOCTYPE html>
@@ -86,45 +86,42 @@ $genre = '';
                 </div>
                 <div class="col-md-8">
                     <h1 class="text-center title">
-                        Connexion
+                        Ajout d'un nouvel employé
                     </h1>
                     <div class="row">
-                        <div class="col-md-12">
-                            <center>
-                                <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
 
-
+                            <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
+                                <div class="row form-addemp">
                                     <div class="form-group col-sm-6">
-                                        <label>Nom</label>
+                                        <label>Genre</label>
+                                        <select name="genre" class="form-control">
+                                            <option value="homme">Monsieur</option>
+                                            <option value="femme">Madame</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-addemp">
+                                    <div class="form-group col-sm-6">
+                                        <label>Nom :</label>
                                         <input type="text" name="nom" class="form-control" id="" value="<?php echo $nom; ?>">
                                     </div>
 
                                     <div class="form-group col-sm-6">
-                                        <label>Prénom</label>
+                                        <label>Prénom :</label>
                                         <input type="text" name="prenom" class="form-control" id="" value="<?php echo $prenom; ?>">
                                     </div>
 
                                     <div class="form-group col-sm-6">
-                                        <label>Numéro de téléphone</label>
+                                        <label>Numéro de téléphone :</label>
                                         <input type="text" name="telephone" class="form-control" id="" value="<?php echo $telephone; ?>">
                                     </div>
 
                                     <div class="form-group col-sm-6">
-                                        <label>Nom de l'image ( avec extension )</label>
+                                        <label>Nom de l'image : ( avec extension )</label>
                                         <input type="" name="image" class="form-control" id="" value="<?php echo $nom_image; ?>">
                                     </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Genre</label>
-                                        <select name="genre" class="form-control">
-                                            <option value="homme">Homme</option>
-                                            <option value="femme">Femme</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-6">                              
-                                    </div>
-
                                     <div class="form-group col-sm-12">
-                                        <label>Adresse mail</label>
+                                        <label>Adresse mail :</label>
                                         <input type="email" name="email" class="form-control" id="" value="<?php echo $email; ?>">
                                     </div>
 
@@ -135,12 +132,11 @@ $genre = '';
                                     <div class="col-sm-6">
                                         <a href="contact.php" class="btn btn-lg btn-primary btn-block">Annuler</a>
                                     </div>
-                                </form>
-                                <div>
-                                    <?php echo $msgErreur; ?>
                                 </div>
-                            </center>
-                        </div>
+                            </form>
+                            <div>
+                                <?php echo $msgErreur; ?>
+                            </div>
                     </div>
                     <div class="col-md-2">
                     </div>

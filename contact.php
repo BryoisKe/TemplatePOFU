@@ -8,15 +8,9 @@ try {
 }
 $idEmploye = 0;
 $role = 0;
+$img = '';
 if (isset($_SESSION['role'])) {
     $role = 1;
-}
-if (isset($_GET['id'])) {
-    $idEmploye = $_GET['id'];
-    $rqtSuppEmploye = $bdd->prepare('UPDATE tblemployes SET status_employe = 0 WHERE numero = :numero');
-    $rqtSuppEmploye->bindValue(':numero', $idEmploye);
-    $rqtSuppEmploye->execute();
-    header("Location: contact.php");
 }
 ?>
 <!DOCTYPE html>
@@ -69,7 +63,7 @@ if (isset($_GET['id'])) {
                     if ($role == 1) {
                         echo '<br><div class="row">'
                         . '<div class="col-sm-4"><a href="add-employe.php" class="btn btn-lg btn-primary btn-block">Ajouter un employé</a></div>'
-                        . '<div class="col-sm-4"><a href="display-delete-employe.php" class="btn btn-lg btn-primary btn-block">Les employés supprimés</a></div>'
+                        . '<div class="col-sm-4"><a href="display-delete-employe.php" class="btn btn-lg btn-primary btn-block">Les employés désactivés</a></div>'
                         . '<div class="col-sm-4"></div></div><br>';
                     }
                     ?>
@@ -80,35 +74,51 @@ if (isset($_GET['id'])) {
                             $numeroEmploye = 1;
                             $rqtEmploye = $bdd->prepare('SELECT numero,prenom, nom, telephone,adresse_mail,genre,image_employe,status_employe FROM tblemployes');
                             $rqtEmploye->execute();
-                            while ($row = $rqtEmploye->fetch(PDO::FETCH_OBJ)) {                                
-                                if($row->telephone == NULL){
+                            while ($row = $rqtEmploye->fetch(PDO::FETCH_OBJ)) {
+                                if ($row->telephone == NULL) {
                                     $AfficheNum = '';
-                                }
-                                else{
+                                } else {
                                     $AfficheNum = $row->telephone;
                                 }
-                                if($row->genre == 'homme'){
+                                if ($row->genre == 'homme') {
                                     $genre = 'Monsieur';
-                                }
-                                else{
+                                } else {
                                     $genre = 'Madame';
                                 }
-                                
-                                if ($row->status_employe == 1) {
-                                    echo '<div class="listeImageEmploye">
-                                                <img alt="Image de collaborateur ', $numeroEmploye, '" src="img/employe/', $row->image_employe, '" class="imgCollabo"/>
+                                if ($row->image_employe == '' || $row->image_employe == NULL) {
+                                    $img = 'no-image.png';
+                                } else {
+                                    if ($dossier = opendir('./img/employe')) {
+                                        while (false != ($fichier = readdir($dossier))) {
+                                            if ($fichier != '.' && $fichier != '..') {
+                                                if($row->image_employe == $fichier){
+                                                    $img = $row->image_employe;
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    $img = 'no-image.png';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                    if ($row->status_employe == 1) {
+                                        echo '<div class="listeImageEmploye">
+                                                <img alt="Image de collaborateur ', $numeroEmploye, '" src="img/employe/', $img, '" class="imgCollabo"/>
                                                 <p> ', $genre, ' ', $row->nom, ' ', $row->prenom, '<br>
                                                 ', $row->adresse_mail, '<br>
-                                                ', $AfficheNum,'<br>';
-                                    if ($role == 1) {
-                                        echo '<a href="', $_SERVER['PHP_SELF'], '?id=', $row->numero, '" onclick="return confirm(\'Etes-vous sûr ?\');">Supprimer l\'employé</a><br>';
-                                        echo '<a href="update-employe.php?id=', $row->numero, '" >Modifier l\'employé</a>';
+                                                ', $AfficheNum, '<br>';
+                                        if ($role == 1) {
+                                            echo '<a href="confirmation-employe.php?id=', $row->numero, '">Supprimer l\'employé</a><br>';
+                                            echo '<a href="update-employe.php?id=', $row->numero, '" >Modifier l\'employé</a>';
+                                        }
+                                        echo '</p></div>';
+                                        $numeroEmploye += 1;
                                     }
-                                    echo '</p></div>';
-                                    $numeroEmploye += 1;
                                 }
-                            }
-                            ?>
+                                ?>
                         </center>
                     </div>
                     <br><br>

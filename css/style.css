@@ -72,3 +72,6 @@ input{
 .listeImageEmploye{
     display: inline-block;
 }
+.form-addemp {
+    margin: 5px;
+}

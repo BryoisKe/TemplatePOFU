@@ -97,7 +97,7 @@ require_once './inc/banner.inc.php';
                 </div>
                 <div class="col-md-8">
                     <h1 class="text-center title">
-                        Connexion
+                        Modification de l'employé
                     </h1>
                     <div class="row">
                         <div class="col-md-12">
