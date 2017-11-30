@@ -1,11 +1,10 @@
 <?php
 session_start();
 //Vérification des sessions
-if(!isset($_SESSION['role'])){
-        header("Location: index.php");
-}
- else {
-    if(!$_SESSION['role'] == 'administrateur'){
+if (!isset($_SESSION['role'])) {
+    header("Location: index.php");
+} else {
+    if (!$_SESSION['role'] == 'administrateur') {
         header("Location: index.php");
     }
 }
@@ -34,31 +33,66 @@ if (isset($_GET['id'])) {
         $prenom = $row->prenom;
         $email = $row->adresse_mail;
         $telephone = $row->telephone;
-        $nom_image = $row->image_employe;
+        $nom_imageBdd = $row->image_employe;
+        $_SESSION['nom_image'] = $nom_imageBdd;
     }
 }
 //Modification de l'employé dans la bdd
 
-if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['image']) and isset($_POST['email'])) {
-    if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['image']) and ! empty($_POST['email'])) {
+if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['email'])) {
+    if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['email'])) {
         $nom = $_POST['nom'];
         $prenom = $_POST['prenom'];
         $email = $_POST['email'];
         $telephone = $_POST['telephone'];
-        $nom_image = $_POST['image'];
+        // A REGLER 
+        if ($_FILES['avatar']['name'] != '') {
+            $nom_image = $_SESSION['nom_image'];
+        } else {
+            $nom_image = basename($_FILES['avatar']['name']);
+        }
+
+
         $rqtUpdateEmploye = $bdd->prepare('UPDATE tblemployes SET prenom =:prenom, nom =:nom, telephone =:telephone,adresse_mail=:email,image_employe =:image'
                 . ' WHERE numero =:id');
-        
+
         $rqtUpdateEmploye->bindValue(':prenom', $prenom);
         $rqtUpdateEmploye->bindValue(':nom', $nom);
         $rqtUpdateEmploye->bindValue(':email', $email);
         $rqtUpdateEmploye->bindValue(':telephone', $telephone);
         $rqtUpdateEmploye->bindValue(':image', $nom_image);
         $rqtUpdateEmploye->bindValue(':id', $numero_employe);
-        
+
         $rqtUpdateEmploye->execute();
+
+        if ($_SESSION['nom_image'] != 'no-image.png') {
+            unlink('img/employe/' . $_SESSION['nom_image']);
+        }
+        if (isset($_FILES['avatar'])) {
+            $dossier = './img/employe/';
+            $fichier = basename($_FILES['avatar']['name']);
+            $taille_maxi = 300000;
+            $taille = filesize($_FILES['avatar']['tmp_name']);
+            $extensions = array('.png', '.jpg', '.jpeg');
+            $extension = strrchr($_FILES['avatar']['name'], '.');
+//Début des vérifications de sécurité...
+            if (!in_array($extension, $extensions)) { //Si l'extension n'est pas dans le tableau
+                $erreur = 'Vous devez uploader un fichier de type png, jpg, jpeg';
+            }
+            if ($taille > $taille_maxi) {
+                $erreur = 'Le fichier est trop gros...';
+            }
+            if (!isset($erreur)) { //S'il n'y a pas d'erreur, on upload
+                if (move_uploaded_file($_FILES['avatar']['tmp_name'], $dossier . $fichier)) { //Si la fonction renvoie TRUE, c'est que ça a fonctionné...
+                    echo 'oui';
+                } else { //Sinon (la fonction renvoie FALSE).
+                    echo 'Echec de l\'upload !';
+                }
+            } else {
+                $msgErreur = $erreur;
+            }
+        }
         header("Location: contact.php");
-        
     } else {
         $msgErreur = 'Veuillez remplir un champ';
     }
@@ -84,9 +118,9 @@ if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone
     <body>
 
         <div class="container-fluid">
-<?php
-require_once './inc/banner.inc.php';
-?>
+            <?php
+            require_once './inc/banner.inc.php';
+            ?>
             <div class="row banner">
                 <div class="col-md-12">
 
@@ -102,7 +136,7 @@ require_once './inc/banner.inc.php';
                     <div class="row">
                         <div class="col-md-12">
                             <center>
-                                <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
+                                <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>" enctype="multipart/form-data">
 
 
                                     <div class="form-group col-sm-6">
@@ -121,15 +155,20 @@ require_once './inc/banner.inc.php';
                                     </div>
 
                                     <div class="form-group col-sm-6">
-                                        <label>Nom de l'image ( avec extension )</label>
-                                        <input type="" name="image" class="form-control" id="" value="<?php echo $nom_image; ?>">
-                                    </div>	
+                                        <label>Choisir une image</label>
+                                        <input type="hidden" name="MAX_FILE_SIZE" value="100000">
+                                        <input type="file" name="avatar" class="form-control" v>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <p>l'image actuel : </p>
+                                        <?php echo '<img src="img/employe/', $_SESSION['nom_image'], '" class="imgCollabo"/>' ?>
+                                    </div>
 
                                     <div class="form-group col-sm-12">
                                         <label>Adresse mail</label>
                                         <input type="email" name="email" class="form-control" id="" value="<?php echo $email; ?>">
                                     </div>
-
+                                    <div><?php echo $msgErreur; ?></div>
                                     <div class="col-sm-6">
                                         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Valider"/>
                                     </div>
@@ -138,13 +177,13 @@ require_once './inc/banner.inc.php';
                                         <a href="contact.php" class="btn btn-lg btn-primary btn-block">Annuler</a>
                                     </div>
                                 </form>
-<?php echo $msgErreur; ?>
                             </center>
                         </div>
                     </div>
                     <div class="col-md-2">
                     </div>
                 </div>
+                <br>
                 <br>
                 <div class="row footer">
                     <div class="col-md-12">

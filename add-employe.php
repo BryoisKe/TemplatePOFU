@@ -25,13 +25,13 @@ $genre = '';
 
 
 //Ajout de l'employé dans la bdd
-if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['image']) and isset($_POST['email'])) {
-    if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['image']) and ! empty($_POST['email'])) {
+if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone']) and isset($_POST['email']) and isset($_FILES['avatar'])) {
+    if (!empty($_POST['nom']) and ! empty($_POST['prenom']) and ! empty($_POST['email'])) {
         $nom = $_POST['nom'];
         $prenom = $_POST['prenom'];
         $email = $_POST['email'];
         $telephone = $_POST['telephone'];
-        $nom_image = $_POST['image'];
+        $nom_image = basename($_FILES['avatar']['name']);
         $genre = $_POST['genre'];
         $role = 60;
 
@@ -41,45 +41,40 @@ if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone
         $rqtAddEmploye->bindValue(':nom', $nom);
         $rqtAddEmploye->bindValue(':email', $email);
         $rqtAddEmploye->bindValue(':telephone', $telephone);
-        $rqtAddEmploye->bindValue(':image', 'no-image.png');
+        $rqtAddEmploye->bindValue(':image', $nom_image);
         $rqtAddEmploye->bindValue(':genre', $genre);
         $rqtAddEmploye->bindValue(':role', $role);
 
-        $rqtAddEmploye->execute();
+        $dossier = './img/employe/';
+        $fichier = basename($_FILES['avatar']['name']);
+        $taille_maxi = 100000;
+        $taille = filesize($_FILES['avatar']['tmp_name']);
+        $extensions = array('.png', '.jpg', '.jpeg');
+        $extension = strrchr($_FILES['avatar']['name'], '.');
+//Début des vérifications de sécurité...
+        if (!in_array($extension, $extensions)) { //Si l'extension n'est pas dans le tableau
+            $erreur = 'Vous devez uploader un fichier de type png, jpg, jpeg';
+        }
+        if ($taille > $taille_maxi) {
+            $erreur = 'Le fichier est trop gros...';
+        }
+        if (!isset($erreur)) { //S'il n'y a pas d'erreur, on upload
+            if (move_uploaded_file($_FILES['avatar']['tmp_name'], $dossier . $fichier)) { //Si la fonction renvoie TRUE, c'est que ça a fonctionné...
+                $rqtAddEmploye->execute();
+                header("Location: contact.php");
+            } else { //Sinon (la fonction renvoie FALSE).
+                echo 'Echec de l\'upload !';
+            }
+        } else {
+            echo $erreur;
+        }
         header("Location: contact.php");
         exit();
     } else {
         $msgErreur = 'Veuillez remplir un champ';
     }
 }
-if (isset($_FILES['avatar'])) {
-    $dossier = './img/employe/';
-    $fichier = basename($_FILES['avatar']['name']);
-    $taille_maxi = 100000;
-    $taille = filesize($_FILES['avatar']['tmp_name']);
-    $extensions = array('.png', '.jpg', '.jpeg');
-    $extension = strrchr($_FILES['avatar']['name'], '.');
-//Début des vérifications de sécurité...
-    if (!in_array($extension, $extensions)) { //Si l'extension n'est pas dans le tableau
-        $erreur = 'Vous devez uploader un fichier de type png, jpg, jpeg';
-    }
-    if ($taille > $taille_maxi) {
-        $erreur = 'Le fichier est trop gros...';
-    }
-    if (!isset($erreur)) { //S'il n'y a pas d'erreur, on upload
-        //On formate le nom du fichier ici...
-        $fichier = strtr($fichier, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-        $fichier = preg_replace('/([^.a-z0-9]+)/i', '-', $fichier);
-        if (move_uploaded_file($_FILES['avatar']['tmp_name'], $dossier . $fichier)) { //Si la fonction renvoie TRUE, c'est que ça a fonctionné...
-            echo 'Upload effectué avec succès !';
-            header("Location: contact.php");
-        } else { //Sinon (la fonction renvoie FALSE).
-            echo 'Echec de l\'upload !';
-        }
-    } else {
-        echo $erreur;
-    }
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -146,9 +141,8 @@ if (isset($_FILES['avatar'])) {
 
                                 <div class="form-group col-sm-6">
                                     <label>Nom de l'image : ( avec extension )</label>
-                                    <input type="text" name="image" class="form-control" id="imageUpload" value="">
                                     <input type="hidden" name="MAX_FILE_SIZE" value="100000">
-                                    <input type="file" name="avatar">
+                                    <input type="file" name="avatar" class="form-control">
                                 </div>
 
                                 <div class="form-group col-sm-12">
@@ -165,7 +159,7 @@ if (isset($_FILES['avatar'])) {
                                 </div>
                             </div>
                         </form>
-                        
+
                         <br><br>
                         <div>
                             <?php echo $msgErreur; ?>
