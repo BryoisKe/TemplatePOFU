@@ -46,10 +46,13 @@ if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone
         $email = $_POST['email'];
         $telephone = $_POST['telephone'];
         // A REGLER 
-        if ($_FILES['avatar']['name'] != '') {
-            $nom_image = $_SESSION['nom_image'];
-        } else {
+        
+        $test =  basename($_FILES['avatar']['name']);
+        if ($test != '') {
             $nom_image = basename($_FILES['avatar']['name']);
+             unlink('img/employe/' . $_SESSION['nom_image']);
+        } else {
+            $nom_image = $_SESSION['nom_image'];
         }
 
 
@@ -64,10 +67,7 @@ if (isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['telephone
         $rqtUpdateEmploye->bindValue(':id', $numero_employe);
 
         $rqtUpdateEmploye->execute();
-
-        if ($_SESSION['nom_image'] != 'no-image.png') {
-            unlink('img/employe/' . $_SESSION['nom_image']);
-        }
+        
         if (isset($_FILES['avatar'])) {
             $dossier = './img/employe/';
             $fichier = basename($_FILES['avatar']['name']);
